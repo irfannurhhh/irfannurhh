@@ -1,0 +1,67 @@
+{% macro img(src) %}<img src="{{ url_for('static', filename=src) }}" loading="lazy" alt="" onerror="this.remove()">{% endmacro %}
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ P.name }} — Portfolio</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head><body>
+<header class="nav"><div class="wrap nav-in">
+<a class="logo" href="#home">{{ P.name.split()[0] }}<span>.</span></a>
+<button class="burger" aria-label="Menu">☰</button>
+<nav>{% for id, l in NAV %}<a href="#{{ id }}">{{ l }}</a>{% endfor %}</nav></div></header>
+
+<section id="home" class="hero"><div class="wrap hero-g">
+<div><p class="eyebrow rv">{{ P.role }} · {{ P.major }}</p>
+<h1 class="rv">{{ P.name }}</h1><p class="sub rv">{{ P.univ }}</p>
+<p class="lead rv">{{ P.tagline }}</p>
+<div class="btns rv"><a class="btn pri" href="#about">Tentang Saya</a><a class="btn" href="#projects">Lihat Portfolio</a><a class="btn" href="#contact">Hubungi Saya</a></div></div>
+<div class="photo rv"><b>{{ P.name[0] }}</b>{{ img(P.photo) }}</div></div></section>
+
+<section id="about" class="light"><div class="wrap"><h2 class="rv">Tentang Saya</h2>
+<div class="two"><div class="rv">{% for t in ABOUT.text %}<p>{{ t }}</p>{% endfor %}</div>
+<div class="photo sm rv"><b>{{ P.name[0] }}</b>{{ img(P.photo) }}</div></div>
+<div class="grid">
+<div class="card rv"><h3>Pendidikan</h3>{% for e in ABOUT.education %}<p><strong>{{ e.school }}</strong><br>{{ e.detail }}<br><small>{{ e.year }}</small></p>{% endfor %}</div>
+<div class="card rv"><h3>Minat</h3><p>{% for i in ABOUT.interests %}<span class="chip">{{ i }}</span>{% endfor %}</p></div>
+<div class="card rv"><h3>Tujuan Karier</h3><p>{{ ABOUT.goals }}</p></div></div></div></section>
+
+<section id="organisasi"><div class="wrap"><h2 class="rv">Pengalaman Organisasi</h2>
+<div class="tl">{% for o in ORGS %}<article class="item card rv"><small>{{ o.period }}</small><h3>{{ o.name }}</h3>
+<p class="role">{{ o.role }}</p><p>{{ o.desc }}</p><p><strong>Kontribusi:</strong> {{ o.contrib }}</p>{{ img(o.photo) }}</article>{% endfor %}</div></div></section>
+
+<section id="magang" class="light"><div class="wrap"><h2 class="rv">Pengalaman Magang</h2>
+<div class="tl">{% for m in INTERNS %}<article class="item card rv"><small>{{ m.period }}</small><h3>{{ m.company }}</h3>
+<p class="role">{{ m.position }}</p><p>{{ m.desc }}</p>
+<ul>{% for t in m.tasks %}<li>{{ t }}</li>{% endfor %}</ul>
+<p>{% for s in m.skills %}<span class="chip">{{ s }}</span>{% endfor %}</p>{{ img(m.photo) }}</article>{% endfor %}</div></div></section>
+
+<section id="sertifikat"><div class="wrap"><h2 class="rv">Sertifikat &amp; Pencapaian</h2>
+<div class="grid">{% for c in CERTS %}<figure class="card cert rv" data-group="certs" data-lb="{{ url_for('static', filename=c.img) }}" data-cap="{{ c.name }}">
+<div class="thumb">{{ img(c.img) }}</div><h3>{{ c.name }}</h3><p>{{ c.org }} · {{ c.year }}</p><small>{{ c.note }}</small></figure>{% endfor %}</div></div></section>
+
+<section id="skills" class="light"><div class="wrap"><h2 class="rv">Soft Skills</h2>
+<div class="grid">{% for n, v in SOFT %}<div class="card rv"><div class="row"><span>{{ n }}</span><small>{{ v }}%</small></div><div class="bar"><i data-level="{{ v }}"></i></div></div>{% endfor %}</div>
+<h2 class="rv gap">Hard Skills</h2>
+{% for g, items in HARD %}<h3 class="rv sub-h">{{ g }}</h3><div class="grid sk">{% for ic, n in items %}<div class="card rv"><span class="ic">{{ ic }}</span>{{ n }}</div>{% endfor %}</div>{% endfor %}</div></section>
+
+<section id="album"><div class="wrap"><h2 class="rv">Album &amp; Dokumentasi</h2>
+<div class="filters rv"><button class="on" data-f="all">Semua</button>{% for a in ALBUMS %}<button data-f="{{ a.slug }}">{{ a.name }}</button>{% endfor %}</div>
+<div class="masonry">{% for p in photos %}<a class="ph rv" data-group="album" data-cat="{{ p.cat }}" data-lb="{{ url_for('static', filename=p.src) }}"><img src="{{ url_for('static', filename=p.src) }}" loading="lazy" alt=""></a>{% endfor %}</div>
+{% if not photos %}<p class="empty">Belum ada foto. Taruh file di <code>static/img/album/&lt;kategori&gt;/</code>.</p>{% endif %}</div></section>
+
+<section id="projects" class="light"><div class="wrap"><h2 class="rv">Project</h2>
+<div class="grid">{% for p in PROJECTS %}<article class="card rv proj"><div class="thumb">{{ img(p.img) }}</div><h3>{{ p.name }}</h3><p>{{ p.desc }}</p>
+<p>{% for t in p.tech %}<span class="chip">{{ t }}</span>{% endfor %}</p><ul>{% for f in p.features %}<li>{{ f }}</li>{% endfor %}</ul>
+<p>{% if p.github %}<a class="lnk" href="{{ p.github }}" target="_blank" rel="noopener">GitHub ↗</a>{% endif %} {% if p.demo %}<a class="lnk" href="{{ p.demo }}" target="_blank" rel="noopener">Demo ↗</a>{% endif %}</p></article>{% endfor %}</div></div></section>
+
+<section id="contact"><div class="wrap"><h2 class="rv">Contact Me</h2><div class="two">
+<div class="rv links"><a href="mailto:{{ CONTACT.email }}">✉ {{ CONTACT.email }}</a><a href="{{ CONTACT.instagram }}" target="_blank" rel="noopener">Instagram ↗</a>
+<a href="{{ CONTACT.linkedin }}" target="_blank" rel="noopener">LinkedIn ↗</a><a href="{{ CONTACT.github }}" target="_blank" rel="noopener">GitHub ↗</a><a href="{{ CONTACT.whatsapp }}" target="_blank" rel="noopener">WhatsApp ↗</a></div>
+<form id="cf" class="rv"><input name="nama" placeholder="Nama" required><input name="email" type="email" placeholder="Email" required>
+<textarea name="pesan" rows="5" placeholder="Pesan" required></textarea><button class="btn pri">Kirim</button><p id="st"></p></form></div></div></section>
+<footer>© {{ P.name }}</footer>
+
+<div class="lb"><button class="x">✕</button><button class="pv">‹</button><img alt=""><button class="nx">›</button><p></p></div>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body></html>
