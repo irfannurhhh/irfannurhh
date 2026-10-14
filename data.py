@@ -8,9 +8,8 @@ P = dict(name="Irfan Nur Hidayat", role="Mahasiswa", major="Teknologi Rekayasa O
          tagline="Mahasiswa yang bersemangat membangun solusi otomasi, dari sensor dan mikrokontroler sampai aplikasi web.")
 
 ABOUT = dict(
-    text=["Saya merupakan mahasiswa Teknologi Rekayasa Otomasi Universitas Diponegoro yang memiliki ketertarikan pada teknologi, elektronika, pemrograman, dan sistem otomasi. Ketertarikan tersebut saya kembangkan melalui kegiatan praktikum elektronika, pemrograman Python, serta proyek pengendalian tiga LED berbasis ESP32 menggunakan web server.
-
-Saya memiliki kemauan untuk terus belajar, bertanggung jawab, dan mampu bekerja sama dalam tim. Melalui pengalaman praktikum dan proyek yang telah dikerjakan, saya terus mengembangkan kemampuan teknis, pemecahan masalah, serta kesiapan untuk menghadapi tantangan di dunia profesional."],
+    text=["Saya merupakan mahasiswa Teknologi Rekayasa Otomasi Universitas Diponegoro yang memiliki ketertarikan pada teknologi, elektronika, pemrograman, dan sistem otomasi. Ketertarikan tersebut saya kembangkan melalui kegiatan praktikum elektronika, pemrograman Python, serta proyek pengendalian tiga LED berbasis ESP32 menggunakan web server.", 
+         "Saya memiliki kemauan untuk terus belajar, bertanggung jawab, dan mampu bekerja sama dalam tim. Melalui pengalaman praktikum dan proyek yang telah dikerjakan, saya terus mengembangkan kemampuan teknis, pemecahan masalah, serta kesiapan untuk menghadapi tantangan di dunia profesional."],
     education=[dict(school="Universitas Diponegoro", detail="D4 Teknologi Rekayasa Otomasi", year="2026 – sekarang")],
     interests=["Engineering", "Programming", "Automation", "Teknologi"],
     goals="Berkarier sebagai engineer otomasi dan terus belajar teknologi industri 4.0.")
