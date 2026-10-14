@@ -1,4 +1,5 @@
-import json, os, time
+import json, os, time, smtplib
+from email.message import EmailMessage
 from flask import Flask, render_template, request, jsonify
 import data as D
 
@@ -19,6 +20,23 @@ def album_photos():
     return out
 
 
+def kirim_email(n, e, m):
+    """Kirim pesan ke email Anda. Dilewati kalau SMTP_USER/SMTP_PASS belum diatur."""
+    user = os.environ.get("SMTP_USER")
+    pw = os.environ.get("SMTP_PASS")
+    if not (user and pw):
+        return
+    msg = EmailMessage()
+    msg["Subject"] = f"Pesan portfolio dari {n}"
+    msg["From"] = user
+    msg["To"] = user
+    msg["Reply-To"] = e
+    msg.set_content(f"Nama: {n}\nEmail: {e}\n\n{m}")
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as s:
+        s.login(user, pw)
+        s.send_message(msg)
+
+
 @app.route("/")
 def index():
     return render_template("index.html", photos=album_photos(), **D.__dict__)
@@ -31,6 +49,10 @@ def contact():
         return jsonify(ok=False, msg="Mohon lengkapi nama, email valid, dan pesan."), 400
     with open(os.path.join(BASE, "messages.jsonl"), "a", encoding="utf-8") as f:
         f.write(json.dumps({"waktu": time.strftime("%Y-%m-%d %H:%M:%S"), "nama": n, "email": e, "pesan": m}, ensure_ascii=False) + "\n")
+    try:
+        kirim_email(n, e, m)
+    except Exception as err:
+        print("Email gagal dikirim:", err)  # pesan tetap aman di messages.jsonl
     return jsonify(ok=True, msg="Terima kasih! Pesan Anda sudah terkirim.")
 
 
