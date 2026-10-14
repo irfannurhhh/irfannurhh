@@ -21,7 +21,7 @@ def album_photos():
 
 
 def kirim_email(n, e, m):
-    """Kirim pesan ke email Anda. Return True kalau terkirim, False kalau SMTP belum diatur.
+    """Kirim pesan ke email Anda. Return (berhasil, kode_alasan).
 
     Kredensial dibaca dari environment variable (JANGAN ditulis di kode):
       SMTP_USER = alamat Gmail Anda
@@ -29,19 +29,36 @@ def kirim_email(n, e, m):
     """
     user = os.environ.get("SMTP_USER", "").strip()
     pw = os.environ.get("SMTP_PASS", "").replace(" ", "").strip()
-    if not (user and pw):
-        print("SMTP_USER / SMTP_PASS belum terbaca di server")
-        return False
+    kosong = [k for k, v in (("SMTP_USER", user), ("SMTP_PASS", pw)) if not v]
+    if kosong:
+        print("Variabel belum terbaca di server:", ", ".join(kosong))
+        return False, "env_kosong:" + "+".join(kosong)
     msg = EmailMessage()
     msg["Subject"] = f"Pesan portfolio dari {n}"
     msg["From"] = user
     msg["To"] = user
     msg["Reply-To"] = e
     msg.set_content(f"Nama: {n}\nEmail: {e}\n\n{m}")
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
-        s.login(user, pw)
-        s.send_message(msg)
-    return True
+    try:
+        try:
+            with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
+                s.login(user, pw)
+                s.send_message(msg)
+        except smtplib.SMTPAuthenticationError:
+            raise
+        except OSError as err:  # port 465 tidak bisa dijangkau -> coba 587
+            print("SMTP 465 gagal, mencoba 587:", repr(err))
+            with smtplib.SMTP("smtp.gmail.com", 587, timeout=15) as s:
+                s.starttls()
+                s.login(user, pw)
+                s.send_message(msg)
+    except smtplib.SMTPAuthenticationError as err:
+        print("Gmail menolak login:", err)
+        return False, "login_ditolak"
+    except Exception as err:
+        print("Email gagal dikirim:", repr(err))
+        return False, "smtp_error:" + type(err).__name__
+    return True, ""
 
 
 @app.route("/")
@@ -62,14 +79,16 @@ def contact():
         saved = True
     except Exception as err:
         print("Gagal simpan file:", err)
+    alasan = ""
     try:
-        sent = kirim_email(n, e, m)
+        sent, alasan = kirim_email(n, e, m)
     except Exception as err:
-        print("Email gagal dikirim:", err)
+        print("Kesalahan tak terduga saat kirim email:", repr(err))
+        alasan = "error:" + type(err).__name__
 
     if saved or sent:
         return jsonify(ok=True, msg="Terima kasih! Pesan Anda sudah terkirim.")
-    return jsonify(ok=False, msg="Maaf, pesan belum bisa dikirim. Silakan hubungi lewat email."), 500
+    return jsonify(ok=False, msg=f"Maaf, pesan belum bisa dikirim. Silakan hubungi lewat email. (kode: {alasan or 'tidak_diketahui'})"), 500
 
 
 if __name__ == "__main__":
