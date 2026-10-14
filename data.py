@@ -8,16 +8,16 @@ P = dict(name="Irfan Nur Hidayat", role="Mahasiswa", major="Teknologi Rekayasa O
          tagline="Mahasiswa yang bersemangat membangun solusi otomasi, dari sensor dan mikrokontroler sampai aplikasi web.")
 
 ABOUT = dict(
-    text=["Saya mahasiswa Teknologi Rekayasa Otomasi di Universitas Diponegoro yang tertarik menggabungkan engineering, programming, dan otomasi.",
+    text=["Saya merupakan mahasiswa Teknologi Rekayasa Otomasi Universitas Diponegoro yang memiliki ketertarikan pada teknologi, elektronika, dan sistem otomasi. Saya senang mempelajari hal baru, mengembangkan keterampilan, dan terus meningkatkan kemampuan diri untuk mencapai tujuan di masa depan.",
           "Saya senang belajar lewat proyek nyata dan terus mengembangkan kemampuan teknis serta kerja tim."],
     education=[dict(school="Universitas Diponegoro", detail="D4 Teknologi Rekayasa Otomasi", year="2026 – sekarang")],
     interests=["Engineering", "Programming", "Automation", "Teknologi"],
     goals="Berkarier sebagai engineer otomasi dan terus belajar teknologi industri 4.0.")
 
 ORGS = [
-    dict(name="OSIS SMK KaryaTeknologi Jatialawang", role="Sekretaris", period="2024 – 2025",
+    dict(name="OSIS SMK Karya Teknologi Jatilawang", role="Sekretaris", period="2023 – 2025",
         desc="Mengelola kegiatan dan administrasi organisasi, mengarsip seluruh dokumen organisasi.", contrib="Menjadi sekretaris utama di event classmeet", photo="img/orgs/org1.jpg"),
-    dict(name="PMR WIRA Katana SMK KaryaTeknologi Jatialawang", role="Anggota Divisi PDD", period="2024 – 2025",
+    dict(name="PMR WIRA Katana SMK Karya Teknologi Jatilawang", role="Anggota Divisi PDD", period="2024 – 2025",
         desc="Mendokumentasikan seluruh kegiatan, mengelola sosial media organisasi, dan mengarsip seluruh dokumentasi organisasi.", contrib="Mengikuti kegiatan Jumpa Bakti Gembira (JUMBARA) di Desa Sumbang, Banyumas", photo="img/orgs/org2.jpg")
 ]
         
@@ -29,8 +29,8 @@ INTERNS = [dict(company="PT Mada Wikri Tunggal", position="HRD", period="Okt 202
 CERTS = [dict(name="Sertifikasi Kompetensi BNSP", org="Badan Nasional Sertifikasi Profesional", year="2026", note="Telah kompeten pada bidang Perawatan dan Perbaikan Otomotif Kendaraan Ringan Roda 4", img="img/certs/cert1.jpg")]
 
 # level hanya indikator visual (0-100), ubah sesukanya
-SOFT = [("Communication", 76), ("Teamwork", 79), ("Leadership", 77), ("Problem Solving", 74),
-        ("Time Management", 74), ("Adaptability", 77), ("Creativity", 75), ("Responsibility", 76)]
+SOFT = [("Communication", 74), ("Teamwork", 76), ("Leadership", 72), ("Problem Solving", 73),
+        ("Time Management", 74), ("Adaptability", 75), ("Creativity", 75), ("Responsibility", 74)]
 
 HARD = [("Programming", [("🐍", "Python")]),
         ("Automotive & Mechanical", [("🔧", "Maintenance Light Vehicle"), ("🛠️", "Maintenance Electrical System")]),
