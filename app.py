@@ -67,20 +67,12 @@ def contact():
         return jsonify(ok=False, msg="Mohon lengkapi nama, email valid, dan pesan."), 400
 
     saved = sent = False
-    try:  # simpan ke file (hanya berhasil di laptop, di Vercel dilewati)
+       try:
         with open(os.path.join(BASE, "messages.jsonl"), "a", encoding="utf-8") as f:
             f.write(json.dumps({"waktu": time.strftime("%Y-%m-%d %H:%M:%S"), "nama": n, "email": e, "pesan": m}, ensure_ascii=False) + "\n")
         saved = True
-    except OSError:
-        pass
-    try:
-        sent = kirim_email(n, e, m)
     except Exception as err:
-        print("Email gagal dikirim:", err)
-
-    if saved or sent:
-        return jsonify(ok=True, msg="Terima kasih! Pesan Anda sudah terkirim.")
-    return jsonify(ok=False, msg="Maaf, pesan belum bisa dikirim. Silakan hubungi lewat email."), 500
+        print("Gagal simpan file:", err)
 
 
 if __name__ == "__main__":
