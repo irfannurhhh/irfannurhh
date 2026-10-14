@@ -34,7 +34,7 @@ addEventListener('keydown', e => {
 $('#cf').onsubmit = async e => {
   e.preventDefault(); const st = $('#st');
   try {
-    const r = await fetch('irfannurhidayat2020@gmail.com', { method: 'POST', body: new FormData(e.target) }), j = await r.json();
+    const r = await fetch('/contact', { method: 'POST', body: new FormData(e.target) }), j = await r.json();
     st.textContent = j.msg; if (j.ok) e.target.reset();
   } catch { st.textContent = 'Gagal mengirim, coba lagi.'; }
 };
