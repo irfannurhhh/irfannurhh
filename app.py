@@ -42,18 +42,45 @@ def index():
     return render_template("index.html", photos=album_photos(), **D.__dict__)
 
 
+def kirim_email(n, e, m):
+    """Kirim pesan ke email Anda. Return True kalau terkirim, False kalau SMTP belum diatur."""
+    user = os.environ.get("SMTP_USER")
+    pw = os.environ.get("SMTP_PASS")
+    if not (user and pw):
+        return False
+    msg = EmailMessage()
+    msg["Subject"] = f"Pesan portfolio dari {n}"
+    msg["From"] = user
+    msg["To"] = user
+    msg["Reply-To"] = e
+    msg.set_content(f"Nama: {n}\nEmail: {e}\n\n{m}")
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=15) as s:
+        s.login(user, pw)
+        s.send_message(msg)
+    return True
+
+
 @app.post("/contact")
 def contact():
     n, e, m = (request.form.get(k, "").strip() for k in ("nama", "email", "pesan"))
     if not (n and "@" in e and m):
         return jsonify(ok=False, msg="Mohon lengkapi nama, email valid, dan pesan."), 400
-    with open(os.path.join(BASE, "messages.jsonl"), "a", encoding="utf-8") as f:
-        f.write(json.dumps({"waktu": time.strftime("%Y-%m-%d %H:%M:%S"), "nama": n, "email": e, "pesan": m}, ensure_ascii=False) + "\n")
+
+    saved = sent = False
+    try:  # simpan ke file (hanya berhasil di laptop, di Vercel dilewati)
+        with open(os.path.join(BASE, "messages.jsonl"), "a", encoding="utf-8") as f:
+            f.write(json.dumps({"waktu": time.strftime("%Y-%m-%d %H:%M:%S"), "nama": n, "email": e, "pesan": m}, ensure_ascii=False) + "\n")
+        saved = True
+    except OSError:
+        pass
     try:
-        kirim_email(n, e, m)
+        sent = kirim_email(n, e, m)
     except Exception as err:
-        print("Email gagal dikirim:", err)  # pesan tetap aman di messages.jsonl
-    return jsonify(ok=True, msg="Terima kasih! Pesan Anda sudah terkirim.")
+        print("Email gagal dikirim:", err)
+
+    if saved or sent:
+        return jsonify(ok=True, msg="Terima kasih! Pesan Anda sudah terkirim.")
+    return jsonify(ok=False, msg="Maaf, pesan belum bisa dikirim. Silakan hubungi lewat email."), 500
 
 
 if __name__ == "__main__":
