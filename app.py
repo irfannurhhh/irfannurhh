@@ -44,9 +44,10 @@ def index():
 
 def kirim_email(n, e, m):
     """Kirim pesan ke email Anda. Return True kalau terkirim, False kalau SMTP belum diatur."""
-    user = os.environ.get("SMTP_USER")
-    pw = os.environ.get("SMTP_PASS")
+    user = os.environ.get("irfannurhidayat2020@gmail.com")
+    pw = os.environ.get("hhkh queq sjye elht")
     if not (user and pw):
+        print("SMTP_USER / SMTP_PASS belum terbaca di server")
         return False
     msg = EmailMessage()
     msg["Subject"] = f"Pesan portfolio dari {n}"
@@ -58,8 +59,7 @@ def kirim_email(n, e, m):
         s.login(user, pw)
         s.send_message(msg)
     return True
-
-
+    
 @app.post("/contact")
 def contact():
     n, e, m = (request.form.get(k, "").strip() for k in ("nama", "email", "pesan"))
