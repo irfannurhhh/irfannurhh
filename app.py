@@ -20,6 +20,14 @@ def album_photos():
     return out
 
 
+def debug_env():
+    """SEMENTARA: tampilkan NAMA variabel terkait (tanpa isinya) untuk mendiagnosis env kosong."""
+    kunci = sorted(k for k in os.environ if any(t in k.upper() for t in ("SMTP", "STMP", "MAIL", "PASS", "USER")))
+    kunci = [k for k in kunci if k not in ("USER", "LOGNAME")]
+    sha = os.environ.get("VERCEL_GIT_COMMIT_SHA", "")[:7] or "?"
+    return f"env={os.environ.get('VERCEL_ENV', '?')};commit={sha};nama_terlihat={','.join(kunci) or 'tidak_ada'}"
+
+
 def kirim_email(n, e, m):
     """Kirim pesan ke email Anda. Return (berhasil, kode_alasan).
 
@@ -32,7 +40,7 @@ def kirim_email(n, e, m):
     kosong = [k for k, v in (("SMTP_USER", user), ("SMTP_PASS", pw)) if not v]
     if kosong:
         print("Variabel belum terbaca di server:", ", ".join(kosong))
-        return False, "env_kosong:" + "+".join(kosong)
+        return False, "env_kosong:" + "+".join(kosong) + " | " + debug_env()
     msg = EmailMessage()
     msg["Subject"] = f"Pesan portfolio dari {n}"
     msg["From"] = user
